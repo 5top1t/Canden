@@ -11,19 +11,17 @@ if response.status_code == 200:
     soup = BeautifulSoup(response.content, 'html.parser')
     
     # Find the element containing the game schedule
-    schedule_table = soup.find('table', class_='table-schedules')
+    schedule_list = soup.find('div', class_='font-title')
+    print("Schedule list", schedule_list)
     
-    if schedule_table:
+    if  schedule_list:
         # Extract information from the table rows
-        rows = schedule_table.find_all('tr')
-        for row in rows[1:]:  # Skip the header row
-            columns = row.find_all('td')
-            date = columns[0].get_text()
-            time = columns[1].get_text()
-            event = columns[2].get_text()
-            location = columns[3].get_text()
+        for date_entry in schedule_list: 
+            month = date_entry.find('time', class_='uppercase').get_text()
+            day = date_entry.find('time', class_='days').get_text()
+            time = date_entry.find('span', class_='uppercase').get_text()
             
-            print(f"Date: {date}\nTime: {time}\nEvent: {event}\nLocation: {location}\n")
+            print(f"Month: {month}\nDay: {day}\nTime: {time}\n")
     else:
         print("No schedule table found on the page.")
 else:
