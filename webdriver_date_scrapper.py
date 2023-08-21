@@ -20,13 +20,18 @@ def get_schedule(timezone):
 
         if schedule_list:
             for event_entry in schedule_list:
+                name = _get_event_name(event_entry)
                 event_date = _get_event_date(event_entry, timezone)
-                event_dates.append(event_date)
+                event_dates.append({"name": name, "date": event_date})
         else:
             print("No schedule table found on the page.")
     finally:
         driver.quit()
         return event_dates 
+
+def _get_event_name(event_entry):
+    name = event_entry.find('strong', class_='font-title').get_text()
+    return f"USA {name} Basketball"
     
 def _get_event_date(event_entry, timezone):
     month_text = event_entry.find('time', class_='uppercase').get_text()
