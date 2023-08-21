@@ -11,7 +11,7 @@ url = "https://www.usab.com/teams/5x5-mens-world-cup/schedules"
 driver.get(url) 
 
 
-def get_event_dates():
+def get_event_dates(timezone):
     event_dates = []
     
     try:
@@ -45,7 +45,7 @@ def parse_datetime(month, day, year, time, timezone):
    
     try: 
         dt_object = datetime.strptime(event_date_format, full_format)
-        timezone = pytz.timezone("US/Eastern")
+        timezone = pytz.timezone(timezone)
         dt_object = timezone.localize(dt_object)
         return dt_object
     except ValueError:

@@ -3,7 +3,7 @@ from googleapiclient import sample_tools
 
 class GoogleCalendarClient:
     
-    def __init__(self) -> None:
+    def __init__(self, timezone) -> None:
         self.service, self.flags = sample_tools.init(
             [],
             "calendar",
@@ -12,7 +12,7 @@ class GoogleCalendarClient:
             __file__,
             scope="https://www.googleapis.com/auth/calendar",
         )
-        self.timezone = "US/Eastern"
+        self.timezone = timezone
         self.calendars = {}
         self._get_all_calendars()
         
