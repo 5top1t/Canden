@@ -11,23 +11,16 @@ url = "https://www.usab.com/teams/5x5-mens-world-cup/schedules"
 driver.get(url) 
 
 
-def get_event_dates(timezone):
+def get_schedule(timezone):
     event_dates = []
     
     try:
         soup = BeautifulSoup(driver.page_source, 'html.parser')
-        schedule_list = soup.find_all('div', class_='font-title')
+        schedule_list = soup.find_all('div', class_='border')
 
         if schedule_list:
-            for date_entry in schedule_list:
-                month_text = date_entry.find('time', class_='uppercase').get_text()
-                day_text = date_entry.find('time', class_='days').get_text()
-                
-                # Events in the past have no time element
-                time_element = date_entry.find('span', class_='uppercase')
-                time_text = time_element.get_text() if time_element else ""
-                
-                event_date = parse_datetime(month_text, day_text, datetime.now().year, time_text)
+            for event_entry in schedule_list:
+                event_date = _get_event_date(event_entry, timezone)
                 event_dates.append(event_date)
         else:
             print("No schedule table found on the page.")
@@ -35,8 +28,20 @@ def get_event_dates(timezone):
         driver.quit()
         return event_dates 
     
+def _get_event_date(event_entry, timezone):
+    month_text = event_entry.find('time', class_='uppercase').get_text()
+    day_text = event_entry.find('time', class_='days').get_text()
+                
+    # Events in the past have no time element
+    time_element = event_entry.find('span', class_='uppercase')
+    time_text = time_element.get_text() if time_element else ""
     
-def parse_datetime(month, day, year, time, timezone):
+    event_date = _parse_datetime(month_text, day_text, datetime.now().year, time_text, timezone)
+    
+    return event_date
+
+    
+def _parse_datetime(month, day, year, time, timezone):
     if not time:
         time = "12:00 AM EST"
     
