@@ -15,4 +15,4 @@ else:
     
     schedule = get_schedule(timezone)
     for event in schedule:
-        calendar_client.create_event(calendar_id, "USA Basketball", event.date, event.date)
+        calendar_client.create_event(calendar_id, event["name"], event["date"], event["date"])
