@@ -17,16 +17,17 @@ class GoogleCalendarClient:
         self._get_all_calendars()
         
     def create_event(self, calendar_id, summary, startDate, endDate):
+        date_format = "%Y-%m-%d"
         event = {
             'summary': summary, 
             'location': '',
             'description': '',
             'start': {
-                'date': startDate,
+                'date': startDate.strftime(date_format),
                 'timeZone': self.timezone,
             },
             'end': {
-                'date': endDate,
+                'date': endDate.strftime(date_format),
                 'timeZone': self.timezone,
             },
             'recurrence': [],
@@ -50,7 +51,8 @@ class GoogleCalendarClient:
         }
 
         created_calendar = self.service.calendars().insert(body=calendar).execute()
-        self._insert_calendar(created_calendar) 
+        self._insert_calendar(created_calendar)
+        return created_calendar.get("id")
 
     def _get_all_calendars(self):
         try:
