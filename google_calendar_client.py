@@ -1,36 +1,74 @@
-import sys
-
 from google.auth.exceptions import RefreshError
 from googleapiclient import sample_tools
 
-
-def main(argv):
-    # Authenticate and construct service.
-    service, flags = sample_tools.init(
-        argv,
-        "calendar",
-        "v3",
-        __doc__,
-        __file__,
-        scope="https://www.googleapis.com/auth/calendar",
-    )
-
-    try:
-        page_token = None
-        while True:
-            calendar_list = service.calendarList().list(pageToken=page_token).execute()
-            for calendar_list_entry in calendar_list["items"]:
-                print(calendar_list_entry["summary"], calendar_list_entry["id"])
-            page_token = calendar_list.get("nextPageToken")
-            if not page_token:
-                break
-
-    except RefreshError:
-        print(
-            "The credentials have been revoked or expired, please re-run"
-            "the application to re-authorize."
+class GoogleCalendarClient:
+    
+    def __init__(self) -> None:
+        self.service, self.flags = sample_tools.init(
+            [],
+            "calendar",
+            "v3",
+            __doc__,
+            __file__,
+            scope="https://www.googleapis.com/auth/calendar",
         )
+        self.timezone = "US/Eastern"
+        self.calendars = {}
+        self._get_all_calendars()
+        
+    def create_event(self, calendar_id, summary, startDate, endDate):
+        event = {
+            'summary': summary, 
+            'location': '',
+            'description': '',
+            'start': {
+                'date': startDate,
+                'timeZone': self.timezone,
+            },
+            'end': {
+                'date': endDate,
+                'timeZone': self.timezone,
+            },
+            'recurrence': [],
+            'attendees': [],
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+                ],
+            },
+        }
 
+        event = self.service.events().insert(calendarId=calendar_id, body=event).execute()
+        print(f"Event created: {event.get('htmlLink')}")
+                
+    def create_calendar(self, calendar_name):
+        calendar = {
+            'summary': calendar_name,
+            'timeZone': self.timezone
+        }
 
-if __name__ == "__main__":
-    main(sys.argv)
+        created_calendar = self.service.calendars().insert(body=calendar).execute()
+        self._insert_calendar(created_calendar) 
+
+    def _get_all_calendars(self):
+        try:
+            page_token = None
+            while True:
+                calendar_list = self.service.calendarList().list(pageToken=page_token).execute()
+                for calendar_list_entry in calendar_list["items"]:
+                    self._insert_calendar(calendar_list_entry)    
+                page_token = calendar_list.get("nextPageToken")
+                if not page_token:
+                    break
+
+        except RefreshError:
+            print(
+                "The credentials have been revoked or expired, please re-run"
+                "the application to re-authorize."
+            )
+            
+
+    def _insert_calendar(self, calendar):
+        self.calendars[calendar["id"]] = calendar["summary"]
