@@ -1,38 +1,53 @@
-import time 
+from datetime import datetime
 from selenium import webdriver 
-from selenium.webdriver import Chrome 
-from selenium.webdriver.chrome.service import Service 
-from selenium.webdriver.common.by import By 
-from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
+import pytz
 
 # Create Chrome options with headless mode
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--headless')  # Enable headless mode
 driver = webdriver.Chrome(options=chrome_options)
+url = "https://www.usab.com/teams/5x5-mens-world-cup/schedules" 
+driver.get(url) 
 
-try:
-    url = "https://www.usab.com/teams/5x5-mens-world-cup/schedules" 
-    driver.get(url) 
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-    # Find the element containing the game schedule
-    schedule_list = soup.find_all('div', class_='font-title')
-    # print("Schedule list", schedule_list)
+def get_event_dates():
+    event_dates = []
+    
+    try:
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        schedule_list = soup.find_all('div', class_='font-title')
 
-    if schedule_list:
-        # Extract information from the table rows
-        for date_entry in schedule_list:
-            # print(date_entry)
-            month_time = date_entry.find('time', class_='uppercase').get_text()
-            day_text = date_entry.find('time', class_='days').get_text()
-            
-            # Events in the past have no time element
-            time_element = date_entry.find('span', class_='uppercase')
-            time_text = time_element.get_text() if time_element else ""
-            
-            print(f"Month: {month_time}\nDay: {day_text}\nTime: {time_text}\n")
-    else:
-        print("No schedule table found on the page.")
-finally:
-    driver.quit()
+        if schedule_list:
+            for date_entry in schedule_list:
+                month_text = date_entry.find('time', class_='uppercase').get_text()
+                day_text = date_entry.find('time', class_='days').get_text()
+                
+                # Events in the past have no time element
+                time_element = date_entry.find('span', class_='uppercase')
+                time_text = time_element.get_text() if time_element else ""
+                
+                event_date = parse_datetime(month_text, day_text, datetime.now().year, time_text)
+                event_dates.append(event_date)
+        else:
+            print("No schedule table found on the page.")
+    finally:
+        driver.quit()
+        return event_dates 
+    
+    
+def parse_datetime(month, day, year, time, timezone):
+    if not time:
+        time = "12:00 AM EST"
+    
+    event_date_format = f"{month} {day} {year} {time}"
+    full_format = "%b %d %Y %I:%M %p %Z"
+   
+    try: 
+        dt_object = datetime.strptime(event_date_format, full_format)
+        timezone = pytz.timezone("US/Eastern")
+        dt_object = timezone.localize(dt_object)
+        return dt_object
+    except ValueError:
+        print(ValueError(f"Unable to parse datetime string: {event_date_format}"))
+        return None
