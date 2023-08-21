@@ -73,4 +73,4 @@ class GoogleCalendarClient:
             
 
     def _insert_calendar(self, calendar):
-        self.calendars[calendar["id"]] = calendar["summary"]
+        self.calendars[calendar["summary"]] = calendar["id"]
