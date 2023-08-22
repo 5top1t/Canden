@@ -18,16 +18,17 @@ class GoogleCalendarClient:
         
     def create_event(self, calendar_id, summary, startDate, endDate):
         date_format = "%Y-%m-%d"
+        date_time_format = "%Y-%m-%d"
         event = {
             'summary': summary, 
             'location': '',
             'description': '',
             'start': {
-                'date': startDate.strftime(date_format),
+                'dateTime': startDate.isoformat(),
                 'timeZone': self.timezone,
             },
             'end': {
-                'date': endDate.strftime(date_format),
+                'dateTime': endDate.isoformat(),
                 'timeZone': self.timezone,
             },
             'recurrence': [],
@@ -53,6 +54,10 @@ class GoogleCalendarClient:
         created_calendar = self.service.calendars().insert(body=calendar).execute()
         self._insert_calendar(created_calendar)
         return created_calendar.get("id")
+    
+    def delete_calendar(self, calendar_name):
+        self.service.calendars().delete(calendarId=self.calendars[calendar_name]).execute()
+        self.calendars.pop(calendar_name)
 
     def _get_all_calendars(self):
         try:

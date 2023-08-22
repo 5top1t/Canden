@@ -13,6 +13,12 @@ else:
     calendar_id = calendar_client.create_calendar("USA Basketball")
     print(f"Created {calendar_name} calendar.")
     
-    schedule = get_schedule(timezone)
-    for event in schedule:
-        calendar_client.create_event(calendar_id, event["name"], event["date"], event["date"])
+    try:
+        schedule = get_schedule(timezone)
+        for event in schedule:
+            calendar_client.create_event(calendar_id, event["name"], event["startDatetime"], event["endDatetime"])
+    except Exception as e:
+        print(f"An error occurred while creating events: {e}")
+        calendar_client.delete_calendar(calendar_name)
+        print(f"Deleted {calendar_name} calendar.")
+        

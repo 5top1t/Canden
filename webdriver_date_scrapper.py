@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from selenium import webdriver 
 from bs4 import BeautifulSoup
 import pytz
@@ -21,8 +21,9 @@ def get_schedule(timezone):
         if schedule_list:
             for event_entry in schedule_list:
                 name = _get_event_name(event_entry)
-                event_date = _get_event_date(event_entry, timezone)
-                event_dates.append({"name": name, "date": event_date})
+                event_start_datetime = _get_event_datetime(event_entry, timezone)
+                event_end_datetime = event_start_datetime + timedelta(hours=2)
+                event_dates.append({"name": name, "startDatetime": event_start_datetime, "endDatetime": event_end_datetime})
         else:
             print("No schedule table found on the page.")
     finally:
@@ -33,7 +34,7 @@ def _get_event_name(event_entry):
     name = event_entry.find('strong', class_='font-title').get_text()
     return f"USA {name} Basketball"
     
-def _get_event_date(event_entry, timezone):
+def _get_event_datetime(event_entry, timezone):
     month_text = event_entry.find('time', class_='uppercase').get_text()
     day_text = event_entry.find('time', class_='days').get_text()
                 
