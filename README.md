@@ -84,7 +84,7 @@ One solutions would be to building the sharable link and create the calendar as 
 
 Approach #2 seems to be the winner.
 
-### Scrapping the internet
+### S****ing the internet
 
 [Schedules -  USA Basketball Men's World Cup Team - USA Basketball](https://www.usab.com/teams/5x5-mens-world-cup/schedules)
 
