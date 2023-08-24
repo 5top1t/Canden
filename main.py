@@ -10,7 +10,7 @@ if calendar_name in calendar_client.calendars:
     calendar_id = calendar_client.calendars[calendar_name]
     print(f"{calendar_name} calendar already exists.")
 else:
-    calendar_id = calendar_client.create_calendar("USA Basketball")
+    calendar_id = calendar_client.create_calendar(calendar_name)
     print(f"Created {calendar_name} calendar.")
     
     try:
