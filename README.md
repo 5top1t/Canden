@@ -4,11 +4,19 @@ Ever wanted to create a calendar or event for a concert, sport team, artist tour
 
 In the example, we create a calendar from the team USA basketball schedule <https://www.usab.com/teams/5x5-mens-world-cup/schedules>.
 
-### Roadmap
+❌ : represents failed attempts feel free to skip over these sections
+✅: represents the approach used in code
+
+
+## Existing products
+
+[Stanza](https://www.stanza.co/?&search=nba-warriors&goT=feature) is an existing product that allows users to sync events, sports, shows, etc schedules to their calendars. However not all events are in Stanza such as the Team USA mens basketball schedule. Canden is another to quickly add events to calendar once you know which HTML elements hold the date and info on the websites.
+
+## Roadmap
 
 - [x]  Try to build in java
   - Setting up maven on my own is too complex
-- [x]  Scope the effort (2 days)
+- [x]  Scope the effort
   - [x]  Design
   - [x]  Test the Google Calendar API
   - [x]  Find website tags
@@ -23,93 +31,44 @@ In the example, we create a calendar from the team USA basketball schedule <http
 - [x]  Create a main file to seal the deal
   - [x]  Move the timezone to the main file
 
-### Similar products
+## References
 
-[Stanza](https://www.stanza.co/?&search=nba-warriors&goT=feature)
+- [Google Calendar API scopes  |  Google for Developers](https://developers.google.com/calendar/api/auth)
+- [Beautiful Soup docs](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+- [How to S***pe JavaScript-Rendered Web Pages with Python](https://www.zenrows.com/blog/scraping-javascript-rendered-web-pages#requirements)
 
-### Objective
+## Design
 
-Allow users to add events from a webpage to a calendar
-
-Features
+Allow users to add events from a webpage to a calendar. Write some python scripts to get the schedule from the website and insert events to Google Calendar.
 
 - Get events from a webpage
-- Save events to a google calender
 - Create a google calendar from a list of events
-
-### Design
-
-Google calendar API - support getting calendars and creating calendars with permissions based on the webpage. Needs to be tested. ics file format represents a calendar where the events are list in chronological order
-
-[API Reference  |  Google Calendar  |  Google for Developers](https://developers.google.com/calendar/api/v3/reference)
-
-[](https://github.com/googleapis/google-api-python-client/blob/main/docs/start.md)
-
-CadenCalendarService
-
-- Search goggle calendar
-- Get google calendar by id
 
 ### GoogleAPIClient
 
-API connections are not support Oauth is required
+Get started with [Google Calendar Client](https://developers.google.com/calendar/api/quickstart/python) in python. 
+
+#### ❌ API Key Auth
+
+API Auth connections are not supported so we need to set up a Oauth Client.
 
 ```python
 googleapiclient.errors.HttpError: <HttpError 401 when requesting https://www.googleapis.com/calendar/v3/users/me/calendarList?key=AIzaSyCAHNx-w6U3OEV3ypTpAeM8TCZgnPpIeGE&alt=json returned "API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication". Details: "[{'message': 'Login Required.', 'domain': 'global', 'reason': 'required', 'location': 'Authorization', 'locationType': 'header'}]"
 ```
 
-[](https://console.cloud.google.com/apis/credentials?project=canden)
+#### ✅ Oauth 2.0 Client Id
 
-**Minimum required scopes**
+- Create a project in GCP and add Google Calendar to the project
+- Set up an OathClient and copy the client_secrets.json to the root of the project
+- python oauth2client will look for the secrets file to connect to the project
 
-[Choose Google Calendar API scopes  |  Google for Developers](https://developers.google.com/calendar/api/auth)
+### S***ping the website
 
-- Calendar API
-- <https://www.googleapis.com/auth/calendar> scope - See, edit, share, and permanently delete all the calendars you can access using Google Calendar.
-
-************************************Sharing a calendar************************************
+Read the game schedule from the team website - [Schedules -  USA Basketball Men's World Cup Team - USA Basketball](https://www.usab.com/teams/5x5-mens-world-cup/schedules)
 
 Approaches
 
-1. Sharable link available to the user
-2. Require users to sign in and insert a new copy in their calendar
+- ❌ Use chat gpt prompt to do the grunt work - `use python and beautifulsoup to get the game schedule from https://www.usab.com/teams/5x5-mens-world-cup/schedules` does not work. Check github commits for solution.
 
-It seems sharing a calendar requires manual from the web app and cannot be done via the API. When sharing a calendar the app displays a public link of the form:
-
-```jsx
-https://calendar.google.com/calendar/u/0?cid={{unique_cid}}
-```
-
-One solutions would be to building the sharable link and create the calendar as public. However, it seems the `cid` does not match any of the fields available on the [calendar](https://developers.google.com/calendar/api/v3/reference/calendars). Since this application will be deploy on a server navigating the web app is not feasible.
-
-Approach #2 seems to be the winner.
-
-### S****ing the internet
-
-[Schedules -  USA Basketball Men's World Cup Team - USA Basketball](https://www.usab.com/teams/5x5-mens-world-cup/schedules)
-
-******************Prompting******************
-
-Using a simple chat gpt prompt such as
-
-`use python and beautifulsoup to get the game schedule from https://www.usab.com/teams/5x5-mens-world-cup/schedules`
-
-does not work. Check github commits for solution.
-
-********************************Prompting with div.font-title********************************
-
-Using a simple chat gpt prompt such as
-
-`use python and beautifulsoup to get the game schedule from the sub elements of div.font-title on https://www.usab.com/teams/5x5-mens-world-cup/schedules website`
-
-It requires pasting the HTML body for closer inspection which is too long.
-
-****************************************************************************************Modify the original script for the Fiba page****************************************************************************************
-
-Inspecting the result, it seems the dates info is loaded using a script. The raw HTML file does not contain the desired element and class. This conclusion comes from inspecting the python request.content
-
-**Selenium web driver**
-
-[How to Scrape JavaScript-Rendered Web Pages with Python](https://www.zenrows.com/blog/scraping-javascript-rendered-web-pages#requirements)
-
-Using a Selenium web driver will our the script to parse the DOM after the javascript schedule content is loaded.
+- ❌ ChatGPT chose the wrong element so specify the elements in the prompt. Using a simple chat gpt prompt such as `use python and beautifulsoup to get the game schedule from the sub elements of div.font-title on https://www.usab.com/teams/5x5-mens-world-cup/schedules website`
+- ✅ Inspecting the result, it seems the dates info is loaded using a script tag. On page load the HTML body may not contain the desired element and class. This conclusion comes from inspecting the python `request.content`. We can use **selenium** to load the page and then get the schedule using bs4.
