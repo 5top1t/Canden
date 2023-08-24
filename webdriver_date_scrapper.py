@@ -16,7 +16,7 @@ def get_schedule(timezone):
     
     try:
         soup = BeautifulSoup(driver.page_source, 'html.parser')
-        schedule_list = soup.find_all('div', class_='border')
+        schedule_list = soup.find_all('div', class_='event')
 
         if schedule_list:
             for event_entry in schedule_list:
