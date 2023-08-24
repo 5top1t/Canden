@@ -17,8 +17,6 @@ class GoogleCalendarClient:
         self._get_all_calendars()
         
     def create_event(self, calendar_id, summary, startDate, endDate):
-        date_format = "%Y-%m-%d"
-        date_time_format = "%Y-%m-%d"
         event = {
             'summary': summary, 
             'location': '',
