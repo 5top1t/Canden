@@ -34,6 +34,7 @@ In the example, we create a calendar from the team USA basketball schedule <http
 ## References
 
 - [Google Calendar API scopes  |  Google for Developers](https://developers.google.com/calendar/api/auth)
+- [Selenium docs](https://selenium-python.readthedocs.io/index.html)
 - [Beautiful Soup docs](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 - [How to S***pe JavaScript-Rendered Web Pages with Python](https://www.zenrows.com/blog/scraping-javascript-rendered-web-pages#requirements)
 
