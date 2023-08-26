@@ -41,7 +41,7 @@ class GoogleCalendarClient:
         }
 
         event = self.service.events().insert(calendarId=calendar_id, body=event).execute()
-        print(f"Event created: {event.get('htmlLink')}")
+        print(f"{summary} event created: {event.get('htmlLink')}")
                 
     def create_calendar(self, calendar_name):
         calendar = {
@@ -74,6 +74,5 @@ class GoogleCalendarClient:
                 "the application to re-authorize."
             )
             
-
     def _insert_calendar(self, calendar):
         self.calendars[calendar["summary"]] = calendar["id"]
