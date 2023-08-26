@@ -4,7 +4,7 @@ Ever wanted to create a calendar or event for a concert, sport team, artist tour
 
 In the example, we create a calendar from the team USA basketball schedule <https://www.usab.com/teams/5x5-mens-world-cup/schedules>.
 
-❌ : represents potential issues  
+⚠️ : represents potential issues  
 ✅: represents the approach used in code
 
 
@@ -49,7 +49,7 @@ Allow users to add events from a webpage to a calendar. Write some python script
 
 Get started with [Google Calendar Client](https://developers.google.com/calendar/api/quickstart/python) in python. 
 
-#### ❌ API Key Auth
+#### ⚠️ API Key Auth
 
 API Auth connections are not supported so we need to set up a Oauth Client.
 
@@ -69,7 +69,7 @@ Read the game schedule from the team website - [Schedules -  USA Basketball Men'
 
 Approaches
 
-- ❌ Use chat gpt prompt to do the grunt work - `use python and beautifulsoup to get the game schedule from https://www.usab.com/teams/5x5-mens-world-cup/schedules` does not work. Check github commits for solution.
+- ⚠️ Use chat gpt prompt to do the grunt work - `use python and beautifulsoup to get the game schedule from https://www.usab.com/teams/5x5-mens-world-cup/schedules` does not work. Check github commits for solution.
 
-- ❌ ChatGPT chose the wrong element so specify the elements in the prompt. Using a simple chat gpt prompt such as `use python and beautifulsoup to get the game schedule from the sub elements of div.font-title on https://www.usab.com/teams/5x5-mens-world-cup/schedules website`
+- ⚠️ ChatGPT chose the wrong element so specify the elements in the prompt. Using a simple chat gpt prompt such as `use python and beautifulsoup to get the game schedule from the sub elements of div.font-title on https://www.usab.com/teams/5x5-mens-world-cup/schedules website`
 - ✅ Inspecting the result, it seems the dates info is loaded using a script tag. On page load the HTML body may not contain the desired element and class. This conclusion comes from inspecting the python `request.content`. We can use **selenium** to load the page and then get the schedule using bs4.
