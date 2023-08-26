@@ -4,7 +4,7 @@ Ever wanted to create a calendar or event for a concert, sport team, artist tour
 
 In the example, we create a calendar from the team USA basketball schedule <https://www.usab.com/teams/5x5-mens-world-cup/schedules>.
 
-❌ : represents failed attempts feel free to skip over these sections
+❌ : represents potential issues  
 ✅: represents the approach used in code
 
 
