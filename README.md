@@ -54,7 +54,7 @@ Get started with [Google Calendar Client](https://developers.google.com/calendar
 API Auth connections are not supported so we need to set up a Oauth Client.
 
 ```python
-googleapiclient.errors.HttpError: <HttpError 401 when requesting https://www.googleapis.com/calendar/v3/users/me/calendarList?key=AIzaSyCAHNx-w6U3OEV3ypTpAeM8TCZgnPpIeGE&alt=json returned "API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication". Details: "[{'message': 'Login Required.', 'domain': 'global', 'reason': 'required', 'location': 'Authorization', 'locationType': 'header'}]"
+googleapiclient.errors.HttpError: <HttpError 401 when requesting https://www.googleapis.com/calendar/v3/users/me/calendarList?key=<API-KEY>&alt=json returned "API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication". Details: "[{'message': 'Login Required.', 'domain': 'global', 'reason': 'required', 'location': 'Authorization', 'locationType': 'header'}]"
 ```
 
 #### ✅ Oauth 2.0 Client Id
