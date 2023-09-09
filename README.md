@@ -9,6 +9,15 @@ In the example, we create a calendar from the team USA basketball schedule <http
 ⚠️ : represents potential issues  
 ✅: represents the approach used in code
 
+## Running locally using python3
+1. Fork the repo
+2. Create a virtual env and install the dependencies in the requirements.txt file
+3. In your [Google Developer Console](https://console.developers.google.com), create a new project named Canden with access to the Calendar API.
+4. Add OAuth 2.0 credentials to the Canden project and copy the `client_secrets.json` to the root of the project. Do not commit the secrets file.
+5. Cmd to add to calendar: `python3 main.py`
+6. Customize the date scrapper for another website and repeat step 5 😄
+
+
 
 ## Existing products
 
